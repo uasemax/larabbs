@@ -78,4 +78,20 @@ class User extends Authenticatable implements MustVerifyEmailContract
 	{
 		return $this->hasMany(Reply::class);
     }
+
+	public function setPasswordAttribute($value)
+	{
+		if (strlen($value) != 60){
+			$value = bcrypt($value);
+		}
+		$this->attribute['password'] = $value;
+    }
+
+	public function setAvatarAttribute($path)
+	{
+		if (!starts_with($path, 'http')){
+			$path = config('app.url') . "/uploads/images/avatars/$path";
+		}
+		$this->attributes['avatar'] = $path;
+    }
 }
